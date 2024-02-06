@@ -17,8 +17,8 @@ func Init(databaseName string) *mongo.Database {
 	// Make MongoDB URI
 	dbUser := util.GetConfig("DB_USER")
 	dbPass := util.GetConfig("DB_PASS")
-	dbHost := util.GetConfig("DB_HOST")
-	mongodbURI := fmt.Sprintf("mongodb+srv://%s:%s@%s/?retryWrites=true&w=majority", dbUser, dbPass, dbHost)
+	dbHost := util.GetConfig("DB_HOST") // Assume DB_HOST does not include "mongodb+srv" protocol and might include a port
+	mongodbURI := fmt.Sprintf("mongodb://%s:%s@%s/?retryWrites=true&w=majority", dbUser, dbPass, dbHost)
 
 	// Set client options
 	clientOptions := options.Client().ApplyURI(mongodbURI)
@@ -29,18 +29,6 @@ func Init(databaseName string) *mongo.Database {
 		panic(err)
 	}
 
-	// Check the connection
-	//err = client.Ping(ctx, nil)
-	//if err != nil {
-	//	panic(err)
-	//}
-
 	database := client.Database(databaseName)
 	return database
-}
-
-func Close(db *mongo.Database) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-	defer cancel()
-	return db.Client().Disconnect(ctx)
 }
