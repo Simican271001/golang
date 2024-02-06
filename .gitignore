@@ -1,0 +1,16 @@
+# environment
+.env
+
+# live reload
+tmp
+air.toml
+
+# testing
+*cover
+
+# ssl
+cert.pem
+key.pem
+
+# goland
+.idea
