@@ -32,3 +32,9 @@ func Init(databaseName string) *mongo.Database {
 	database := client.Database(databaseName)
 	return database
 }
+
+func Close(db *mongo.Database) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
+	return db.Client().Disconnect(ctx)
+}
